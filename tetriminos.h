@@ -2,6 +2,9 @@
 // Created by Caju on 2021-02-27
 //
 
+#ifndef TETRIMINOS_H
+#define TETRIMINOS_H
+
 #include <iostream>
 
 class Tetrimino {
@@ -60,3 +63,5 @@ class RightL : public Ls {};
 class LeftZ : public Ls {};
 
 class RightZ : public Ls {};
+
+#endif //TETRIMINOS_H
