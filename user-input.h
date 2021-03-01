@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <termios.h>
 #include <queue>
+#include <iomanip>
 
 #define START_ESCAPE '\033'
 #define MIDDLE_ESCAPE '['
@@ -28,19 +29,48 @@ void setPosition(int x, int y) {
 }
 
 void moveUp(int times = 1) {
+    int posX_backup = posX;
+    int posY_backup = posY;
+    setPosition(0, 0);
+    std::cout << std::setw(10) << "KEY_UP";
+    setPosition(posX_backup, posY_backup);
+    
     setPosition(posX, posY - times);
 }
 
 void moveRight(int times = 1) {
+    int posX_backup = posX;
+    int posY_backup = posY;
+    setPosition(0, 0);
+    std::cout << std::setw(10) << "KEY_RIGHT";
+    setPosition(posX_backup, posY_backup);
+    
     setPosition(posX + times, posY);
 }
 
 void moveDown(int times = 1) {
+    int posX_backup = posX;
+    int posY_backup = posY;
+    setPosition(0, 0);
+    std::cout << std::setw(10) << "KEY_DOWN";
+    setPosition(posX_backup, posY_backup);
+    
     setPosition(posX, posY + times);
 }
 
 void moveLeft(int times = 1) {
+    int posX_backup = posX;
+    int posY_backup = posY;
+    setPosition(0, 0);
+    std::cout << std::setw(10) << "KEY_LEFT";
+    setPosition(posX_backup, posY_backup);
+    
     setPosition(posX - times, posY);
+}
+
+void clearScreen() {
+    std::cout << "\033[2J";
+    setPosition(posX, posY);
 }
 
 class Key {
@@ -87,6 +117,8 @@ public:
         std::cout.setf(std::ios::unitbuf);
     }
     
+    bool first = false;
+    
     void loop() {
         
         keepLooping = true;
@@ -104,12 +136,18 @@ public:
             
             if( res > 0 )
             {
+                if(!first) {
+                    clearScreen();
+                }
+                first = true;
                 read( fileno( stdin ), &c, 1 );
                 
                 if (c == START_ESCAPE) {
                     read( fileno( stdin ), &c, 1 );
+                    //std::cout << c << std::endl;
                     if (c == MIDDLE_ESCAPE) {
                         read( fileno( stdin ), &c, 1 );
+                        //std::cout << c << std::endl;
                         
                         switch (c) {
                             case 'A':

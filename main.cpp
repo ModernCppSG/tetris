@@ -5,12 +5,14 @@
 
 int main() {
     
-    int time = 10e3;
+    int time = 10e5;
     
     std::cout << "This will work for " << time << " milliseconds." << std::endl;
     std::cout << "Press arrow keys or anything to test." << std::endl;
     
     UserInput& userInput{UserInput::getInstance()};
+    
+    userInput.initUserInput();
     
     std::thread ui(&UserInput::loop, &userInput);
     
