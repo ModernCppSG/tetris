@@ -10,9 +10,9 @@ int main() {
     std::cout << "This will work for " << time << " milliseconds." << std::endl;
     std::cout << "Press arrow keys or anything to test." << std::endl;
     
-    initUserInput();
+    UserInput& userInput{UserInput::getInstance()};
     
-    std::thread ui(loopReadUserInput);
+    std::thread ui(&UserInput::loop, &userInput);
     
     auto timeInit = std::chrono::high_resolution_clock::now();
     auto timeEnd = std::chrono::high_resolution_clock::now();
@@ -21,7 +21,7 @@ int main() {
         timeEnd = std::chrono::high_resolution_clock::now();
     } while( std::chrono::duration<double, std::milli>{timeEnd - timeInit}.count() < time );
     
-    keepLooping = false;
+    userInput.stopLoop();
     
     std::cout << "precisa juntar?" <<std::endl;
     
@@ -37,7 +37,7 @@ int main() {
     
     std::cout << "acabou!" << std::endl << std::endl;
     
-    endUserInput();
+    userInput.endUserInput();
     
     return 0;
 }

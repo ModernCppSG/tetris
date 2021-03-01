@@ -12,25 +12,11 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <termios.h>
+#include <queue>
 
-struct termios oldSettings, newSettings;
-fd_set set;
-struct timeval tv{};
-bool keepLooping = true;
+#define START_ESCAPE '\033'
+#define MIDDLE_ESCAPE '['
 
-void initUserInput() {
-    // get current attributes of terminal
-    tcgetattr( fileno( stdin ), &oldSettings );
-    // copy to new settings to modify its copy and be able to restore current settings
-    newSettings = oldSettings;
-    // setting to non-canonical and non-echo
-    newSettings.c_lflag &= (~ICANON & ~ECHO);
-    // change terminal NOW
-    tcsetattr( fileno( stdin ), TCSANOW, &newSettings );
-    
-    //unbuffered cout
-    std::cout.setf(std::ios::unitbuf);
-}
 
 int posY = 3;
 int posX = 1;
@@ -57,79 +43,136 @@ void moveLeft(int times = 1) {
     setPosition(posX - times, posY);
 }
 
-void loopReadUserInput() {
+class Key {
+public:
+    Key(char value, bool isEscaped = false) : value(value), isEscaped(isEscaped) {
     
-    char c;
-    int isArrow = 0;
-    
-    while ( keepLooping )
-    {
+    }
+private:
+    char value;
+    bool isEscaped;
+};
+
+const Key KEY_UP{'A', true};
+const Key KEY_DOWN{'B', true};
+const Key KEY_LEFT{'D', true};
+const Key KEY_RIGHT{'C', true};
+const Key KEY_R{'R'};
+const Key KEY_SPACEBAR{' '};
+const Key KEY_ENTER{'\n'};
+
+//Singleton! //TODO is this a good idea?
+class UserInput {
+public:
+    static UserInput& getInstance() {
+        static UserInput instance;
         
-        tv.tv_sec = 10;
-        tv.tv_usec = 0;
-        
-        FD_ZERO( &set );
-        FD_SET( fileno( stdin ), &set );
-        
-        int res = select( fileno( stdin )+1, &set, nullptr, nullptr, &tv );
-        
-        if( res > 0 )
-        {
-            read( fileno( stdin ), &c, 1 );
-            
-            if (c == '\033') {
-                //std::cout << "seta";
-                isArrow = 1;
-            } else if (isArrow == 1) {
-                isArrow = 2;
-            } else if (isArrow == 2) {
-                std::cout << c;
-                switch (c) {
-                    case 'A':
-                        moveUp();
-                        //std::cout << " para cima";
-                        break;
-                    case 'B':
-                        moveDown();
-                        //std::cout << " para baixo";
-                        break;
-                    case 'C':
-                        moveRight();
-                        //std::cout << " para direita";
-                        break;
-                    case 'D':
-                        moveLeft();
-                        //std::cout << " para esquerda";
-                        break;
-                    default:
-                        std::cout << " DEU RUIM!";
-                }
-                
-                isArrow = 0;
-            } else {
-                std::cout << c;
-            }
-            
-            if(isArrow == 0) {
-                //std::cout << std::endl;
-            }
-        }
-        else if( res < 0 )
-        {
-            perror( "select error" );
-            break;
-        }
-        else
-        {
-            printf( "Select timeout\n" );
-        }
+        return instance;
     }
     
-    std::cout << std::endl << "Fim do loop!" << std::endl;
-}
-
-void endUserInput() {
-    tcsetattr( fileno( stdin ), TCSANOW, &oldSettings );
-}
+    UserInput(UserInput const&) = delete;
+    void operator=(UserInput const&) = delete;
+    
+    void initUserInput() {
+        // get current attributes of terminal
+        tcgetattr( fileno( stdin ), &oldSettings );
+        // copy to new settings to modify its copy and be able to restore current settings
+        newSettings = oldSettings;
+        // setting to non-canonical and non-echo
+        newSettings.c_lflag &= (~ICANON & ~ECHO);
+        // change terminal NOW
+        tcsetattr( fileno( stdin ), TCSANOW, &newSettings );
+        
+        //unbuffered cout
+        std::cout.setf(std::ios::unitbuf);
+    }
+    
+    void loop() {
+        
+        keepLooping = true;
+        char c;
+        
+        while ( keepLooping ) {
+            
+            tv.tv_sec = 10;
+            tv.tv_usec = 0;
+            
+            FD_ZERO( &set );
+            FD_SET( fileno( stdin ), &set );
+            
+            int res = select( fileno( stdin )+1, &set, nullptr, nullptr, &tv );
+            
+            if( res > 0 )
+            {
+                read( fileno( stdin ), &c, 1 );
+                
+                if (c == START_ESCAPE) {
+                    read( fileno( stdin ), &c, 1 );
+                    if (c == MIDDLE_ESCAPE) {
+                        read( fileno( stdin ), &c, 1 );
+                        
+                        switch (c) {
+                            case 'A':
+                                inputQueue.push(KEY_UP);
+                                moveUp();
+                                break;
+                            case 'B':
+                                inputQueue.push(KEY_DOWN);
+                                moveDown();
+                                break;
+                            case 'C':
+                                inputQueue.push(KEY_RIGHT);
+                                moveRight();
+                                break;
+                            case 'D':
+                                inputQueue.push(KEY_LEFT);
+                                moveLeft();
+                                break;
+                            default:
+                                std::cerr << " DEU RUIM!";
+                        }
+                    }
+                    
+                } else {
+                    std::cout << c;
+                }
+            }
+            else if( res < 0 )
+            {
+                perror( "select error" );
+                break;
+            }
+            else
+            {
+                printf( "Select timeout\n" );
+            }
+        }
+        
+        std::cout << std::endl << "Fim do loop!" << std::endl;
+    }
+    
+    void endUserInput() {
+        tcsetattr( fileno( stdin ), TCSANOW, &oldSettings );
+    }
+    
+    void stopLoop() {
+        keepLooping = false;
+    }
+    
+private:
+    
+    UserInput() {
+    
+    };
+    
+    bool keepLooping = false;
+    
+    std::queue<Key> inputQueue;
+    
+    struct termios oldSettings, newSettings;
+    fd_set set;
+    struct timeval tv{};
+    
+};
 
 #endif //TETRIS_USER_INPUT_H
