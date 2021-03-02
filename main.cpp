@@ -64,7 +64,13 @@ std::vector<std::array<int, 2>> setPosition(int direction, std::vector<std::arra
             // tetrimino moved down and collided, must be frozen
             std::cout << ", tetrimino frozen. Making new tetrimino" << std::endl;
             c.updateOccupiedPositions(newPosition);
-            return coord.assembleTetriminoPosArray(tetri, 0);
+            auto pos = coord.assembleTetriminoPosArray(tetri, 0);
+            if (!c.isColliding(pos) && !c.isOutOfBounds(pos)) {
+                return pos;
+            } else {
+                std::cout << "game over" << std::endl;
+                exit(0);
+            }
         }
     }
 }
