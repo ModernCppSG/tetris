@@ -38,7 +38,6 @@ class CoordinateSystem {
         down = 3
     };
 
-public:
     std::array<std::array<int, 2>, 8> determineWhichDirection(int direction) {
         if (direction == 0) {
             return (verticalPos);
@@ -46,6 +45,8 @@ public:
             return (horizontalPos);
         }
     }
+
+public:
 
     std::vector<std::array<int, 2>> assembleTetriminoPosArray(std::array<std::array<int, 4>, 2> array, int direction) {
         tetriminoPosVector.clear();

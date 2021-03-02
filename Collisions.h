@@ -8,7 +8,7 @@ class evalCollisions{
     using tetriminoVector = std::vector<std::array<int, 2>>;
     int boundariesStart = 0;
     int boundariesXEnd = 50;
-    int boundariesYEnd = 100;
+    int boundariesYEnd = 10;
     tetriminoVector occupiedPositions = {{}};
 
 public:
@@ -18,9 +18,9 @@ public:
         }
     }
 
-    void removeLine(int line) {
+    void removeLine(int lineHeight) {
         for (int item = 0; item != occupiedPositions.size(); item++) {
-            if (occupiedPositions[item][1] == line) {
+            if (occupiedPositions[item][1] == lineHeight) {
                 occupiedPositions.erase(occupiedPositions.begin() + item);
                 item--;
             }
