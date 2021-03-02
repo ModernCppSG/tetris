@@ -5,7 +5,7 @@
 
 int main() {
     
-    int time = 10e5;
+    int time = 1e5;
     
     std::cout << "This will work for " << time << " milliseconds." << std::endl;
     std::cout << "Press arrow keys or anything to test." << std::endl;
@@ -14,7 +14,7 @@ int main() {
     
     userInput.initUserInput();
     
-    std::thread ui(&UserInput::loop, &userInput);
+    std::thread ui(&UserInput::loopReadInput, &userInput);
     
     auto timeInit = std::chrono::high_resolution_clock::now();
     auto timeEnd = std::chrono::high_resolution_clock::now();
@@ -40,6 +40,10 @@ int main() {
     std::cout << "acabou!" << std::endl << std::endl;
     
     userInput.endUserInput();
+    
+    std::string c;
+    
+    std::cin >> c;
     
     return 0;
 }
