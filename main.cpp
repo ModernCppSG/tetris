@@ -7,6 +7,8 @@
 CoordinateSystem coord;
 evalCollisions c;
 
+int score = 0;
+
 // interpretation of horizontal tetrimino
 std::array<std::array<int,4>, 2> tetri = {{{{1, 0, 0, 0}},
                                            {{1, 1, 1, 1}}}};
@@ -66,9 +68,10 @@ std::vector<std::array<int, 2>> setPosition(int direction, std::vector<std::arra
             c.updateOccupiedPositions(newPosition);
             auto pos = coord.assembleTetriminoPosArray(tetri, 0);
             if (!c.isColliding(pos) && !c.isOutOfBounds(pos)) {
+                score++;
                 return pos;
             } else {
-                std::cout << "game over" << std::endl;
+                std::cout << "game over; score = " << score << std::endl;
                 exit(0);
             }
         }
@@ -84,11 +87,14 @@ int main() {
     }
     std::cout << std::endl;
 
-    // move tetrimino to the right
+    // move tetrimino; 0 = right , 1 = left , 2 = down, 3 = up
     int direction;
     while (true) {
         std::cout << "\nnext position: ";
         std::cin >> direction;
+        if (direction > 3 || direction < 0) {
+            break;
+        }
         position = setPosition(direction, position);
     }
 
