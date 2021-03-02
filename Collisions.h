@@ -28,26 +28,16 @@ public:
     }
 
     bool isOutOfBounds(const tetriminoVector& vector) const {
-        for (const auto& item : vector) {
-            if (boundariesStart <= item[0] && item[0] <= boundariesXEnd &&
-                boundariesStart <= item[1] && item[1] <= boundariesYEnd) {
-                continue;
-            } else { return true; }
-        }
-        return false;
-    };
+        return std::any_of(vector.begin(), vector.end(), [&](const std::array<int, 2>& item)
+        {return !(boundariesStart <= item[0] && item[0] <= boundariesXEnd) ||
+                !(boundariesStart <= item[1] && item[1] <= boundariesYEnd);});
+    }
 
     bool isColliding(const tetriminoVector& vector) {
-        for (const auto& item : vector) {
-            if (std::find(occupiedPositions.begin(), occupiedPositions.end(), item)
-            != occupiedPositions.end()) {
-                return true;
-            } else {
-                continue;
-            }
-        }
-        return false;
-    };
+        return std::any_of(vector.begin(), vector.end(), [&](const std::array<int, 2>& item)
+        {return std::find(occupiedPositions.begin(), occupiedPositions.end(), item)
+                != occupiedPositions.end();});
+    }
 
     tetriminoVector collisionProjection(tetriminoVector shadowPosition) {
         while (!isOutOfBounds(shadowPosition) && !isColliding(shadowPosition)) {

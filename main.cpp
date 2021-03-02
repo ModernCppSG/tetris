@@ -56,9 +56,9 @@ std::vector<std::array<int, 2>> setPosition(int direction, std::vector<std::arra
         return newPosition;
     } else {
         std::cout << "collision happened";
-        if (direction == 0 || direction == 1) {
+        if (direction == 0 || direction == 1 || direction == 3) {
 
-            // tetrimino moved sideways and collided, new position won't be set
+            // tetrimino moved sideways or up and collided, new position won't be set
             std::cout << ", tetrimino not moved" << std::endl;
             return position;
         } else if (direction == 2) {
