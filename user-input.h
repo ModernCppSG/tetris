@@ -34,7 +34,6 @@
 {                                                           \
     const std::lock_guard<std::mutex> lock{mutex_variable}; \
     operation;                                              \
-                                                            \
 }
 
 int posY = 3;
@@ -245,6 +244,13 @@ public:
     
     void endUserInput() {
         tcsetattr( fileno( stdin ), TCSANOW, &oldSettings );
+    }
+    
+    Key popKey() {
+        const std::lock_guard<std::mutex> lock{inputQueueMtx};
+        Key key = inputQueue.front();
+        inputQueue.pop();
+        return key;
     }
     
     void stopLoop() {
