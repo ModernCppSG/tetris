@@ -6,22 +6,25 @@
 #define TETRIMINOS_H
 
 #include <iostream>
+#include <array>
 
 struct Pixel {
-    int x, y; // index position of pixel inside the 2 by 4 envelope
-    bool state; // if pixel is lit or not
+  int x, y;   // index position of pixel inside the 2 by 4 envelope
+  bool state; // if pixel is lit or not
 };
 
 using envelope = std::array<std::array<bool, 4>, 2>;
 
 class Tetrimino {
 public:
+  Pixel coordinate;
+  Pixel orientation; // TODO
   int numberOfSquares =
       4; // maximum number of filled-in squares any piece can have
   std::tuple<int, int> rotation_point; // index (a, b) for the cell around which
                                        // the rotation happens
   bool cellMatrix; // is the more general cell-matrix accounting for rotations
-  bool envelope;   // is the standard cell-matrix that defines the block
+  envelope tetrimino;   // is the standard cell-matrix that defines the block
 
 private:
   // Print block `drawing` to terminal using `*` and `#` for debugging
@@ -70,4 +73,4 @@ class LeftZ : public Ls {};
 
 class RightZ : public Ls {};
 
-#endif //TETRIMINOS_H
+#endif // TETRIMINOS_H
