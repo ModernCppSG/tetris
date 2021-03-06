@@ -7,6 +7,13 @@
 
 #include <iostream>
 
+struct Pixel {
+    int x, y; // index position of pixel inside the 2 by 4 envelope
+    bool state; // if pixel is lit or not
+};
+
+using envelope = std::array<std::array<bool, 4>, 2>;
+
 class Tetrimino {
 public:
   int numberOfSquares =
@@ -16,10 +23,9 @@ public:
   bool cellMatrix; // is the more general cell-matrix accounting for rotations
   bool envelope;   // is the standard cell-matrix that defines the block
 
+private:
   // Print block `drawing` to terminal using `*` and `#` for debugging
   void display() { std::cout << "Block structure"; };
-
-private:
   virtual void initialize() = 0;
   virtual void rotate() = 0;
 };
