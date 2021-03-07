@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include <array>
+#include <string>
 
 struct Pixel {
   int x, y;   // index position of pixel inside the 2 by 4 envelope
@@ -17,6 +18,7 @@ using envelope = std::array<std::array<bool, 4>, 2>;
 
 class Tetrimino {
 public:
+  std::string color;
   Pixel coordinate;
   Pixel orientation; // TODO
   int numberOfSquares =
