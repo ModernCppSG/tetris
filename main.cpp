@@ -20,7 +20,7 @@ std::ostream& operator<<(std::ostream& os, std::array<int, 2> a) {
 }
 
 int main() {
-    auto position = c.assembleTetriminoCoords(tetri, 0);
+    auto position = c.assembleTetriminoCoords(tetri, 0, false);
 
     int direction;
     while (true) {

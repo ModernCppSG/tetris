@@ -41,12 +41,12 @@ public:
 
         } else { // tetrimino collided
             if (direction == right || direction == left || direction == up)
-            { return position;} // collided sideways, no movement will be done
+            { return position;} // collided sideways or up, no movement will be done
 
             else if (direction == down) {
 
                 updateOccupiedPositions(newPosition);
-                auto pos = assembleTetriminoCoords(getNextTetrimino(), getNextTetriminoDirection());
+                auto pos = assembleTetriminoCoords(getNextTetrimino(), getNextTetriminoDirection(), true);
 
                 if (!isColliding(pos) && !isOutOfBounds(pos)) { // freeze tetrimino
                     for (int iterador = 0; iterador != newPosition.size(); iterador++) {
@@ -63,7 +63,7 @@ public:
     }
 
     bool isRotationPossible(std::array<std::array<int, 4>, 2> array, int direction) {
-        auto rotatedPosition = assembleTetriminoCoords(array, direction);
+        auto rotatedPosition = assembleTetriminoCoords(array, direction, true);
         if (!isColliding(rotatedPosition) && !isOutOfBounds(rotatedPosition)) {
             return true;
         }
