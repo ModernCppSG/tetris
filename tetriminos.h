@@ -14,6 +14,11 @@ struct Pixel {
   bool state; // if pixel is lit or not
 };
 
+struct Color {
+    std::string name;
+    std::string HEXCODE;
+};
+
 using envelope = std::array<std::array<bool, 4>, 2>;
 
 class Tetrimino {
@@ -40,7 +45,7 @@ private:
 //  * Non-Symmetric Pieces: L and Z
 class SymmetricTet : public Tetrimino {};
 
-class Square : public SymmetricTet {
+class Ohh : public SymmetricTet {
   // NOTE square should not rotate
 public:
   bool envelope[2][4] = {{1, 1, 0, 0},
@@ -55,24 +60,20 @@ public:
   };
 };
 
-class Line : public SymmetricTet {};
+class Iye : public SymmetricTet {};
 
 class Tee : public SymmetricTet {};
 
 class NonSymmetricTet : private Tetrimino {};
 
-class Ls : private NonSymmetricTet {};
-
-class Zs : private NonSymmetricTet {};
-
 // Non-Symmetric pieces are further specialized into their left and right
 // versions
-class LeftL : public Ls {};
+class Ehl : public NonSymmetricTet {};
 
-class RightL : public Ls {};
+class Jay : public NonSymmetricTet {};
 
-class LeftZ : public Ls {};
+class Ass : public NonSymmetricTet {};
 
-class RightZ : public Ls {};
+class Zee : public NonSymmetricTet {};
 
 #endif // TETRIMINOS_H
