@@ -22,11 +22,11 @@ struct ReferenceFrame {
     origin.x = x;
     origin.y = y;
   }
+
   void translate(float x, float y) {
     origin.x += x;
     origin.y += y;
   }
-
   void rotate(char direction) {
     matrix rotation;
     if (direction == 'L') {
@@ -34,6 +34,7 @@ struct ReferenceFrame {
     } else if (direction == 'R') {
       rotation = {{{0, 1}, {-1, 0}}};  // clockwise rotation
     } else {
+      // Do Nothing
     }
     orientation = multiply(rotation, orientation);
   }
