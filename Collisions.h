@@ -3,26 +3,27 @@
 #include <algorithm>
 #include <vector>
 #include <array>
-#include "CoordinateSystem.h"
-#include "Tetrimino.h"
 
-class evalCollisions : public CoordinateSystem, Tetrimino {
-public:
+namespace CollisionSystem {
+    using tetriminoVector = std::vector<std::array<int, 2>>;
+    static const int boundariesStart = 0;
+    static const int boundariesXEnd = 10;
+    static const int boundariesYEnd = 20;
 
-    bool isOutOfBounds(const tetriminoVector& vector) const {
+    bool isOutOfBounds(const tetriminoVector& vector) {
         return std::any_of(vector.begin(), vector.end(), [&](const std::array<int, 2>& item)
         {return !(boundariesStart <= item[0] && item[0] <= boundariesXEnd) ||
                 !(boundariesStart <= item[1] && item[1] <= boundariesYEnd);});
     }
 
-    bool isColliding(const tetriminoVector& vector) {
+    bool isColliding(const tetriminoVector& vector, const tetriminoVector& occupiedPositions) {
         return std::any_of(vector.begin(), vector.end(), [&](const std::array<int, 2>& item)
         {return std::find(occupiedPositions.begin(), occupiedPositions.end(), item)
                 != occupiedPositions.end();});
-    };
+    }
 
-    tetriminoVector collisionProjection(tetriminoVector shadowPosition) {
-        while (!isOutOfBounds(shadowPosition) && !isColliding(shadowPosition)) {
+    tetriminoVector collisionProjection(tetriminoVector shadowPosition, const tetriminoVector& occupiedPositions) {
+        while (!isOutOfBounds(shadowPosition) && !isColliding(shadowPosition, occupiedPositions)) {
             for (auto& item : shadowPosition) {
                 item[1] += 1;
             }
@@ -33,43 +34,6 @@ public:
         return shadowPosition;
     }
 
-    tetriminoVector setPosition(tetriminoVector position, int direction) {
-        auto newPosition = updatePosition(position, direction); // simulate new position
-
-        if (!isColliding(newPosition) && !isOutOfBounds(newPosition)) { // tetrimino didn't collide
-            return newPosition;
-
-        } else { // tetrimino collided
-            if (direction == right || direction == left || direction == up)
-            { return position;} // collided sideways or up, no movement will be done
-
-            else if (direction == down) {
-
-                updateOccupiedPositions(newPosition);
-                auto pos = assembleTetriminoCoords(getNextTetrimino(), getNextTetriminoDirection(), true);
-
-                if (!isColliding(pos) && !isOutOfBounds(pos)) { // freeze tetrimino
-                    for (int iterador = 0; iterador != newPosition.size(); iterador++) {
-                        score++;
-                    }
-                    return pos;
-
-                } else { // tetrimino spawned inside another
-                    std::cout << "game over; score = " << score << std::endl;
-                    exit(0);
-                }
-            }
-        }
-    }
-
-    bool isRotationPossible(std::array<std::array<int, 4>, 2> array, int direction) {
-        auto rotatedPosition = assembleTetriminoCoords(array, direction, true);
-        if (!isColliding(rotatedPosition) && !isOutOfBounds(rotatedPosition)) {
-            return true;
-        }
-        else { return false; }
-    }
-
-};
+}
 
 #endif //TETRIS_COLLISIONS_H
