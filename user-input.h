@@ -253,6 +253,10 @@ public:
         return key;
     }
     
+    bool isEmpty() {
+        return inputQueue.size() == 0;
+    }
+    
     void stopLoop() {
         keepLooping = false;
     }
