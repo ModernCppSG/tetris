@@ -18,6 +18,7 @@
 #include <utility>
 #include <atomic>
 #include <mutex>
+#include <map>
 
 #define START_ESCAPE '\033'
 #define MIDDLE_ESCAPE '['
@@ -125,6 +126,10 @@ const Key KEY_R{'R'};
 const Key KEY_SPACEBAR{' ', false, "∽"};
 const Key KEY_ENTER{'\n', false, "↲"};
 
+std::map<char, Key> mapOfKeys = {{'R', KEY_R},
+                                       {' ', KEY_SPACEBAR},
+                                       };
+
 //Singleton! //TODO is this a good idea?
 class UserInput {
 public:
@@ -220,6 +225,9 @@ public:
                     }
                     break;
                 default:
+                    if(mapOfKeys.find(c) == mapOfKeys.end()){
+                        mapOfKeys.insert(c, c);
+                    }
                     std::cout << c;
                     PROTECT(inputQueue.push(c), inputQueueMtx);
                     moveRight();
@@ -251,6 +259,10 @@ public:
         Key key = inputQueue.front();
         inputQueue.pop();
         return key;
+    }
+    
+    bool isEmpty() {
+        return inputQueue.size() == 0;
     }
     
     void stopLoop() {
