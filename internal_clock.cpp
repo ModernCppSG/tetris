@@ -37,11 +37,13 @@ time_unit internal_clock::get_elapsed(){
 }
 
 bool internal_clock::get_is_elapsed(){
-	return is_interval_elapsed.load(std::memory_order::memory_order_seq_cst);
+    auto flag = is_interval_elapsed.load(std::memory_order_seq_cst);
+    is_interval_elapsed.store(false);
+	return flag;
 }
 
 unsigned int internal_clock::get_elapsed_intervals(){
-	return elapsed_intervals.load(std::memory_order::memory_order_seq_cst);
+	return elapsed_intervals.load(std::memory_order_seq_cst);
 }
 
 internal_clock::~internal_clock() {
@@ -72,7 +74,7 @@ void internal_clock::instructions(int interval_slice, int firing_slice){
 
 		// Does the check: Did it elapse?
 		// If so increases the counter and fires a flag of a short duration.
-		if ((elapsed_intervals.load(std::memory_order::memory_order_seq_cst) +  1)* interval < get_elapsed()){
+		if ((elapsed_intervals.load(std::memory_order_seq_cst) +  1)* interval < get_elapsed()){
 			elapsed_intervals++;
 
 			is_interval_elapsed.store(true);

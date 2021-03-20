@@ -56,4 +56,42 @@ void printWalls(const Size& walls) {
 
 }
 
+void moveLeft();
+
+void clearPosition() {
+    std::cout << " ";
+    moveLeft();
+}
+
+void setPosition() {
+    std::cout << "#";
+    moveLeft();
+}
+
+void moveUp() {
+    std::cout << "\033[1A";
+}
+
+void moveDown() {
+    std::cout << "\033[1B";
+}
+
+void moveRight() {
+    std::cout << "\033[1C";
+}
+
+void moveLeft() {
+    std::cout << "\033[1D";
+}
+
+void printCerquilha(int xOld, int yOld, int x, int y) {
+    std::cout << "\033[0;0f";
+    std::cout << "   x: " << x << "\t   y: " << y << std::endl;
+    std::cout << "xOld: " << xOld << "\tyOld: " << yOld;
+    std::cout << "\033[" + std::to_string(yOld) << ";" << std::to_string(xOld) << "f";
+    std::cout << "o";
+    std::cout << "\033[" + std::to_string(y) << ";" << std::to_string(x) << "f";
+    std::cout << "#";
+}
+
 #endif //TETRIS_INTERFACE_H
