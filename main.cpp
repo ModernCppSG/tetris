@@ -19,7 +19,6 @@ int main(){
 		std::cout << "flag is: " << a.get_is_elapsed() << std::endl;
 	}
 
-
 	a.print_elapsed();
 
 }
