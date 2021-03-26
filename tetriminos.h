@@ -36,7 +36,7 @@ class Tetrimino {
   void display(envelope block) {
     // Print block `drawing` to terminal using `*` and `#` for debugging
     // Tetrimino() = {};
-    std::cout << "Block structure";
+    std::cout << "Block structure:\n";
     for (int i; i < 2; i++) {
       std::array row = block[i];
       for (bool pixel : row) {
