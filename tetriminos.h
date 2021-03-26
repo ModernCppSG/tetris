@@ -22,7 +22,7 @@ struct Color {
   std::string HEXCODE;
 };
 
-using envelope = std::array<std::array<bool, 4>, 2>;
+using envelope = std::array<std::array<bool, 4>, 2>;  // is a matrix
 
 class Tetrimino {
  public:
@@ -33,15 +33,18 @@ class Tetrimino {
  private:
   std::tuple<int, int> rotation_point;  // index (a, b) for the cell around
                                         // which the rotation happens
-  void display(envelope) {
+  void display(envelope block) {
     // Print block `drawing` to terminal using `*` and `#` for debugging
     // Tetrimino() = {};
     std::cout << "Block structure";
-    for (bool pixel : envelope) {
-      if (pixel == true)
-        std::cout << "#";
-      else
-        std::cout << "*";
+    for (int i; i < 2; i++) {
+      std::array row = block[i];
+      for (bool pixel : row) {
+        if (pixel == true)
+          std::cout << "#";
+        else
+          std::cout << ".";
+      }
     }
   }
   virtual void initialize() = 0;
