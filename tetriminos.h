@@ -26,9 +26,9 @@ using envelope = std::array<std::array<bool, 4>, 2>;
 
 class Tetrimino {
  public:
-  std::string color;
   ReferenceFrame origin;  // reference frame placed at bottom-left pixel
   envelope pixels;        // is the standard cell-matrix that defines the block
+  Color color;
 
  private:
   // Print block `drawing` to terminal using `*` and `#` for debugging
