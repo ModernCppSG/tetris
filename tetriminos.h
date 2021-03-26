@@ -61,16 +61,31 @@ class Iye : public Tetrimino {
                            {1, 1, 1, 1}};
 };
 
-class Tee : public Tetrimino {};
+class Tee : public Tetrimino {
+    bool envelope[2][4] = {{0, 1, 0, 0}, 
+                           {1, 1, 1, 0}};
+};
 
 // Non-Symmetric pieces are further specialized into their left and right
 // versions
-class Ehl : public Tetrimino {};
+class Ehl : public Tetrimino {
+    bool envelope[2][4] = {{1, 0, 0, 0}, 
+                           {1, 1, 1, 0}};
+};
 
-class Jay : public Tetrimino {};
+class Jay : public Tetrimino {
+    bool envelope[2][4] = {{0, 0, 0, 1}, 
+                           {0, 1, 1, 1}};
+};
 
-class Ass : public Tetrimino {};
+class Ass : public Tetrimino {
+    bool envelope[2][4] = {{0, 1, 1, 0}, 
+                           {1, 1, 0, 0}};
+};
 
-class Zee : public Tetrimino {};
+class Zee : public Tetrimino {
+    bool envelope[2][4] = {{1, 1, 0, 0}, 
+                           {0, 1, 1, 0}};
+};
 
 #endif  // CODE_TETRIS_TETRIMINOS_H_
