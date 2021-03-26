@@ -1,7 +1,6 @@
 // Copyright (c) 2021 ModernCppSG
 // General Tetriminos class and its ramifications
 // Created by Caju on 2021-02-27
-//
 
 #ifndef CODE_TETRIS_TETRIMINOS_H_
 #define CODE_TETRIS_TETRIMINOS_H_
@@ -36,7 +35,15 @@ class Tetrimino {
   // Tetrimino() = {};
   std::tuple<int, int> rotation_point;  // index (a, b) for the cell around
                                         // which the rotation happens
-  void display() { std::cout << "Block structure"; }
+  void display(envelope) {
+    std::cout << "Block structure";
+    for (bool pixel : envelope) {
+      if (pixel == true)
+        std::cout << "#";
+      else
+        std::cout << "*";
+    }
+  }
   virtual void initialize() = 0;
   virtual void rotate() = 0;
 };
@@ -46,17 +53,13 @@ class Ohh : public Tetrimino {
  public:
   bool envelope[2][4] = {{1, 1, 0, 0},
                          {1, 1, 0, 0}};  // initialize cell-matrix for square
-  void display() {
-    for (bool pixel : envelope) {
-      if (pixel == true)
-        std::cout << "#";
-      else
-        std::cout << "*";
-    }
-  }
 };
 
-class Iye : public Tetrimino {};
+class Iye : public Tetrimino {
+  public: 
+    bool envelope[2][4] = {{0, 0, 0, 0}, 
+                           {1, 1, 1, 1}};
+};
 
 class Tee : public Tetrimino {};
 
