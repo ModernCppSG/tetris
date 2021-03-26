@@ -30,7 +30,7 @@ class Tetrimino {
   envelope pixels;        // is the standard cell-matrix that defines the block
   Color color;
 
- private:
+ protected:
   std::tuple<int, int> rotation_point;  // index (a, b) for the cell around
                                         // which the rotation happens
   void display(envelope block) {
