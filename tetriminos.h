@@ -31,11 +31,11 @@ class Tetrimino {
   Color color;
 
  private:
-  // Print block `drawing` to terminal using `*` and `#` for debugging
-  // Tetrimino() = {};
   std::tuple<int, int> rotation_point;  // index (a, b) for the cell around
                                         // which the rotation happens
   void display(envelope) {
+    // Print block `drawing` to terminal using `*` and `#` for debugging
+    // Tetrimino() = {};
     std::cout << "Block structure";
     for (bool pixel : envelope) {
       if (pixel == true)
@@ -56,36 +56,30 @@ class Ohh : public Tetrimino {
 };
 
 class Iye : public Tetrimino {
-  public: 
-    bool envelope[2][4] = {{0, 0, 0, 0}, 
-                           {1, 1, 1, 1}};
+ public:
+  bool envelope[2][4] = {{0, 0, 0, 0}, {1, 1, 1, 1}};
 };
 
 class Tee : public Tetrimino {
-    bool envelope[2][4] = {{0, 1, 0, 0}, 
-                           {1, 1, 1, 0}};
+  bool envelope[2][4] = {{0, 1, 0, 0}, {1, 1, 1, 0}};
 };
 
 // Non-Symmetric pieces are further specialized into their left and right
 // versions
 class Ehl : public Tetrimino {
-    bool envelope[2][4] = {{1, 0, 0, 0}, 
-                           {1, 1, 1, 0}};
+  bool envelope[2][4] = {{1, 0, 0, 0}, {1, 1, 1, 0}};
 };
 
 class Jay : public Tetrimino {
-    bool envelope[2][4] = {{0, 0, 0, 1}, 
-                           {0, 1, 1, 1}};
+  bool envelope[2][4] = {{0, 0, 0, 1}, {0, 1, 1, 1}};
 };
 
 class Ass : public Tetrimino {
-    bool envelope[2][4] = {{0, 1, 1, 0}, 
-                           {1, 1, 0, 0}};
+  bool envelope[2][4] = {{0, 1, 1, 0}, {1, 1, 0, 0}};
 };
 
 class Zee : public Tetrimino {
-    bool envelope[2][4] = {{1, 1, 0, 0}, 
-                           {0, 1, 1, 0}};
+  bool envelope[2][4] = {{1, 1, 0, 0}, {0, 1, 1, 0}};
 };
 
 #endif  // CODE_TETRIS_TETRIMINOS_H_
