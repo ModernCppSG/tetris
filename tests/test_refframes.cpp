@@ -10,7 +10,19 @@
 std::array<std::array<float, 2>, 2> IDENTITY = {{{1, 0}, {0, 1}}};
 
 ReferenceFrame test(0, 0);
-TEST(TestReferenceFrames, ClockwiseRotation) { test.rotate('L'); }
+TEST(TestReferenceFrames, CounterClockwiseRotation) {
+  matrix rot090 = {{{0, -1}, {1, 0}}};
+  matrix rot180 = {{{-1, 0}, {0, -1}}};
+  matrix rot270 = {{{0, 1}, {-1, 0}}};
+  test.rotate('L');
+  ASSERT_EQ(test.orientation, rot090);
+  test.rotate('L');
+  ASSERT_EQ(test.orientation, rot180);
+  test.rotate('L');
+  ASSERT_EQ(test.orientation, rot270);
+  test.rotate('L');
+  ASSERT_EQ(test.orientation, IDENTITY);
+}
 // Rotate right (counter clockwise)
 //
 //
