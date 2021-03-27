@@ -3,11 +3,12 @@
 // Created by Caju on 2021-03-07
 
 #include <array>
+#include <iostream>
 
 #include "../refframes.h"
 #include "./gtest/gtest.h"
 
-std::array<std::array<float, 2>, 2> IDENTITY = {{{1, 0}, {0, 1}}};
+std::array<std::array<int, 2>, 2> IDENTITY = {{{1, 0}, {0, 1}}};
 
 matrix rot090 = {{{0, -1}, {1, 0}}};
 matrix rot180 = {{{-1, 0}, {0, -1}}};
@@ -67,12 +68,12 @@ TEST(TestReferenceFrames, MixedRotations) {
 
   // Rotate right, then left
   ReferenceFrame testR(0, 0);
-  testL.rotate('R');
-  testL.rotate('L');
+  testR.rotate('R');
+  testR.rotate('L');
   ASSERT_EQ(testR.orientation, IDENTITY);
 
-  testL.rotate('R');
-  testL.rotate('R');
-  testL.rotate('L');
+  testR.rotate('R');
+  testR.rotate('R');
+  testR.rotate('L');
   ASSERT_EQ(testR.orientation, minus_rot090);
 }
