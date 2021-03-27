@@ -9,14 +9,13 @@
 
 int main(){
 
-	internal_clock a(std::chrono::milliseconds(200));
+	lock_wrapper teste;
+	internal_clock a(std::chrono::milliseconds(200), 5, &teste);
 
-	a.run(5, 6);
+	a.run();
 
 	for (int x = 0; x < 50; ++x){
 		std::this_thread::sleep_for(std::chrono::milliseconds(30));
-
-		std::cout << "flag is: " << a.get_is_elapsed() << std::endl;
 	}
 
 	a.print_elapsed();
