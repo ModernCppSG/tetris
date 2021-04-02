@@ -1,5 +1,6 @@
 # tetris
 Our attempt to implement Tetris in C++
+[![CMake](https://github.com/ModernCppSG/tetris/actions/workflows/cmake.yml/badge.svg)](https://github.com/ModernCppSG/tetris/actions/workflows/cmake.yml)
 
 ### Short ```internal_clock``` description:
 The internal clock class consists of:
