@@ -46,7 +46,7 @@ void setPosition(int x, int y) {
     //std::cout << "\033[" << y << ";" << x << "H";
     std::cout << MOVE_TO(x, y);
 }
-
+/*
 void moveUp(int times = 1) {
     int posX_backup = posX;
     int posY_backup = posY;
@@ -86,7 +86,7 @@ void moveLeft(int times = 1) {
     
     setPosition(posX - times, posY);
 }
-
+*/
 void clearScreen() {
     std::cout << CLEAR_SCREEN;
     setPosition(posX, posY);
@@ -184,7 +184,7 @@ public:
         if( res > 0 )
         {
             if(!first) {
-                clearScreen();
+                //clearScreen();
             }
             
             first = true;
@@ -205,19 +205,19 @@ public:
                         switch (c) {
                             case 'A':
                                 PROTECT(inputQueue.push(KEY_UP), inputQueueMtx);
-                                moveUp();
+                                //moveUp();
                                 break;
                             case 'B':
                                 PROTECT(inputQueue.push(KEY_DOWN), inputQueueMtx);
-                                moveDown();
+                                //moveDown();
                                 break;
                             case 'C':
                                 PROTECT(inputQueue.push(KEY_RIGHT), inputQueueMtx);
-                                moveRight();
+                                //moveRight();
                                 break;
                             case 'D':
                                 PROTECT(inputQueue.push(KEY_LEFT), inputQueueMtx);
-                                moveLeft();
+                                //moveLeft();
                                 break;
                             default:
                                 std::cerr << " DEU RUIM!";
@@ -226,19 +226,19 @@ public:
                     break;
                 default:
                     if(mapOfKeys.find(c) == mapOfKeys.end()){
-                        mapOfKeys.insert(c, c);
+                        mapOfKeys.emplace(c, c);
                     }
-                    std::cout << c;
+                    //std::cout << c;
                     PROTECT(inputQueue.push(c), inputQueueMtx);
-                    moveRight();
+                    //moveRight();
                     break;
             }
             
             auto oldPosX = posX;
             auto oldPosY = posY;
-            setPosition(0, 50);
-            printQueue();
-            setPosition(oldPosX, oldPosY);
+            //setPosition(0, 50);
+            //printQueue();
+            //setPosition(oldPosX, oldPosY);
         }
         else if( res < 0 )
         {
@@ -246,7 +246,7 @@ public:
         }
         else
         {
-            printf( "Select timeout\n" );
+            //printf( "Select timeout\n" );
         }
     }
     
