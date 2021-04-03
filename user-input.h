@@ -164,82 +164,101 @@ class UserInput {
     while (keepLooping) {
       readInput();
     }
-
-    std::cout << std::endl << "Fim do loopReadInput!" << std::endl;
-  }
-
-  void readInput() {
-    char c;
-
-    tv.tv_sec = 10;
-    tv.tv_usec = 0;
-
-    FD_ZERO(&set);
-    FD_SET(fileno(stdin), &set);
-
-    int res = select(fileno(stdin) + 1, &set, nullptr, nullptr, &tv);
-
-    if (res > 0) {
-      if (!first) {
-        // clearScreen();
-      }
-
-      first = true;
-      read(fileno(stdin), &c, 1);
-
-      switch (c) {
-        case '\n':
-          PROTECT(inputQueue.push(KEY_ENTER), inputQueueMtx);
-          std::cout << KEY_ENTER;
-          break;
-        case START_ESCAPE:
-          read(fileno(stdin), &c, 1);
-          // std::cout << c << std::endl;
-          if (c == MIDDLE_ESCAPE) {
-            read(fileno(stdin), &c, 1);
-            // std::cout << c << std::endl;
-
-            switch (c) {
-              case 'A':
-                PROTECT(inputQueue.push(KEY_UP), inputQueueMtx);
-                // moveUp();
-                break;
-              case 'B':
-                PROTECT(inputQueue.push(KEY_DOWN), inputQueueMtx);
-                // moveDown();
-                break;
-              case 'C':
-                PROTECT(inputQueue.push(KEY_RIGHT), inputQueueMtx);
-                // moveRight();
-                break;
-              case 'D':
-                PROTECT(inputQueue.push(KEY_LEFT), inputQueueMtx);
-                // moveLeft();
-                break;
-              default:
-                std::cerr << " DEU RUIM!";
+    
+    void readInput() {
+        
+        char c;
+        
+        tv.tv_sec = 10;
+        tv.tv_usec = 0;
+        
+        FD_ZERO( &set );
+        FD_SET( fileno( stdin ), &set );
+        
+        int res = select( fileno( stdin )+1, &set, nullptr, nullptr, &tv );
+        
+        if( res > 0 )
+        {
+            if(!first) {
+                //clearScreen();
             }
-          }
-          break;
-        default:
-          if (mapOfKeys.find(c) == mapOfKeys.end()) {
-            mapOfKeys.emplace(c, c);
-          }
-          // std::cout << c;
-          PROTECT(inputQueue.push(c), inputQueueMtx);
-          // moveRight();
-          break;
-      }
-
-      auto oldPosX = posX;
-      auto oldPosY = posY;
-      // setPosition(0, 50);
-      // printQueue();
-      // setPosition(oldPosX, oldPosY);
-    } else if (res < 0) {
-      perror("select error");
-    } else {
-      // printf( "Select timeout\n" );
+            
+            first = true;
+            read( fileno( stdin ), &c, 1 );
+            
+            switch(c) {
+                case '\n':
+                    PROTECT(inputQueue.push(KEY_ENTER), inputQueueMtx);
+                    std::cout << KEY_ENTER;
+                    break;
+                case START_ESCAPE:
+                    read( fileno( stdin ), &c, 1 );
+                    //std::cout << c << std::endl;
+                    if (c == MIDDLE_ESCAPE) {
+                        read( fileno( stdin ), &c, 1 );
+                        //std::cout << c << std::endl;
+        
+                        switch (c) {
+                            case 'A':
+                                PROTECT(inputQueue.push(KEY_UP), inputQueueMtx);
+                                //moveUp();
+                                break;
+                            case 'B':
+                                PROTECT(inputQueue.push(KEY_DOWN), inputQueueMtx);
+                                //moveDown();
+                                break;
+                            case 'C':
+                                PROTECT(inputQueue.push(KEY_RIGHT), inputQueueMtx);
+                                //moveRight();
+                                break;
+                            case 'D':
+                                PROTECT(inputQueue.push(KEY_LEFT), inputQueueMtx);
+                                //moveLeft();
+                                break;
+                            default:
+                                std::cerr << " DEU RUIM!";
+                        }
+                    }
+                    break;
+                default:
+                    if(mapOfKeys.find(c) == mapOfKeys.end()){
+                        mapOfKeys.emplace(c, c);
+                    }
+                    //std::cout << c;
+                    PROTECT(inputQueue.push(c), inputQueueMtx);
+                    //moveRight();
+                    break;
+            }
+            
+            auto oldPosX = posX;
+            auto oldPosY = posY;
+            //setPosition(0, 50);
+            //printQueue();
+            //setPosition(oldPosX, oldPosY);
+        }
+        else if( res < 0 )
+        {
+            perror( "select error" );
+        }
+        else
+        {
+            //printf( "Select timeout\n" );
+        }
+    }
+    
+    void endUserInput() {
+        tcsetattr( fileno( stdin ), TCSANOW, &oldSettings );
+    }
+    
+    Key popKey() {
+        const std::lock_guard<std::mutex> lock{inputQueueMtx};
+        Key key = inputQueue.front();
+        inputQueue.pop();
+        return key;
+    }
+    
+    bool isEmpty() {
+        return inputQueue.size() == 0;
     }
   }
 
