@@ -1,7 +1,6 @@
 // Copyright (c) 2021 ModernCppSG
 // General Tetriminos class and its ramifications
 // Created by Caju on 2021-02-27
-//
 
 #ifndef CODE_TETRIS_TETRIMINOS_H_
 #define CODE_TETRIS_TETRIMINOS_H_
@@ -23,20 +22,31 @@ struct Color {
   std::string HEXCODE;
 };
 
-using envelope = std::array<std::array<bool, 4>, 2>;
+using envelope = std::array<std::array<bool, 4>, 2>;  // is a matrix
 
 class Tetrimino {
  public:
-  std::string color;
   ReferenceFrame origin;  // reference frame placed at bottom-left pixel
   envelope pixels;        // is the standard cell-matrix that defines the block
+  Color color;
 
- private:
-  // Print block `drawing` to terminal using `*` and `#` for debugging
-  // Tetrimino() = {};
+ protected:
   std::tuple<int, int> rotation_point;  // index (a, b) for the cell around
                                         // which the rotation happens
-  void display() { std::cout << "Block structure"; }
+  void display(envelope block) {
+    // Print block `drawing` to terminal using `*` and `#` for debugging
+    // Tetrimino() = {};
+    std::cout << "Block structure:\n";
+    for (int i; i < 2; i++) {
+      std::array row = block[i];
+      for (bool pixel : row) {
+        if (pixel == true)
+          std::cout << "#";
+        else
+          std::cout << ".";
+      }
+    }
+  }
   virtual void initialize() = 0;
   virtual void rotate() = 0;
 };
@@ -46,28 +56,33 @@ class Ohh : public Tetrimino {
  public:
   bool envelope[2][4] = {{1, 1, 0, 0},
                          {1, 1, 0, 0}};  // initialize cell-matrix for square
-  void display() {
-    for (bool pixel : envelope) {
-      if (pixel == true)
-        std::cout << "#";
-      else
-        std::cout << "*";
-    }
-  }
 };
 
-class Iye : public Tetrimino {};
+class Iye : public Tetrimino {
+ public:
+  bool envelope[2][4] = {{0, 0, 0, 0}, {1, 1, 1, 1}};
+};
 
-class Tee : public Tetrimino {};
+class Tee : public Tetrimino {
+  bool envelope[2][4] = {{0, 1, 0, 0}, {1, 1, 1, 0}};
+};
 
 // Non-Symmetric pieces are further specialized into their left and right
 // versions
-class Ehl : public Tetrimino {};
+class Ehl : public Tetrimino {
+  bool envelope[2][4] = {{1, 0, 0, 0}, {1, 1, 1, 0}};
+};
 
-class Jay : public Tetrimino {};
+class Jay : public Tetrimino {
+  bool envelope[2][4] = {{0, 0, 0, 1}, {0, 1, 1, 1}};
+};
 
-class Ass : public Tetrimino {};
+class Ass : public Tetrimino {
+  bool envelope[2][4] = {{0, 1, 1, 0}, {1, 1, 0, 0}};
+};
 
-class Zee : public Tetrimino {};
+class Zee : public Tetrimino {
+  bool envelope[2][4] = {{1, 1, 0, 0}, {0, 1, 1, 0}};
+};
 
 #endif  // CODE_TETRIS_TETRIMINOS_H_

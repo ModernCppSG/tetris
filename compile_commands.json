@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/Users/tiagooliva/code/tetris",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++    -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -std=gnu++2a -o CMakeFiles/tetris.dir/main.cpp.o -c /Users/tiagooliva/code/tetris/main.cpp",
+  "file": "/Users/tiagooliva/code/tetris/main.cpp"
+}
+]
