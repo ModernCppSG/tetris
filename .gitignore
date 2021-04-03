@@ -33,3 +33,9 @@
 /cmake-build-debug/
 /.idea
 /open-terminator.sh
+
+# non-shareble project stuff
+.cproject
+.project
+.settings
+.cache
