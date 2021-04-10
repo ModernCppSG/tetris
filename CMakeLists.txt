@@ -9,8 +9,13 @@ find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
 add_executable(${PROJECT_NAME} main.cpp internal_clock.cpp)
-add_executable(tetris_test tests/test_refframes.cpp)
-
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads)
+
+file(GLOB TEST_SRCS tests/*.cpp)
+
+#message(${TEST_SRCS})
+
+add_executable(tetris_test ${TEST_SRCS})
 target_link_libraries(tetris_test PRIVATE Threads::Threads GTest::gtest GTest::gtest_main)
+
 gtest_discover_tests(tetris_test)
