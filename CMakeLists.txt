@@ -11,5 +11,6 @@ find_package(GTest REQUIRED)
 add_executable(${PROJECT_NAME} main.cpp internal_clock.cpp)
 add_executable(test_refframes tests/test_refframes.cpp)
 
+target_link_libraries (${PROJECT_NAME}/lib ${CMAKE_THREAD_LIBS_INIT})
 target_link_libraries(test_refframes PRIVATE Threads::Threads GTest::gtest GTest::gtest_main)
 gtest_discover_tests(test_refframes)
