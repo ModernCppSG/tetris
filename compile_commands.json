@@ -1,7 +1,17 @@
 [
 {
   "directory": "/Users/tiagooliva/code/tetris",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++  -isystem /usr/local/include  -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -std=gnu++2a -o CMakeFiles/test_refframes.dir/tests/test_refframes.cpp.o -c /Users/tiagooliva/code/tetris/tests/test_refframes.cpp",
+  "file": "/Users/tiagooliva/code/tetris/tests/test_refframes.cpp"
+},
+{
+  "directory": "/Users/tiagooliva/code/tetris",
   "command": "/Library/Developer/CommandLineTools/usr/bin/c++    -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -std=gnu++2a -o CMakeFiles/tetris.dir/main.cpp.o -c /Users/tiagooliva/code/tetris/main.cpp",
   "file": "/Users/tiagooliva/code/tetris/main.cpp"
+},
+{
+  "directory": "/Users/tiagooliva/code/tetris",
+  "command": "/Library/Developer/CommandLineTools/usr/bin/c++    -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX11.1.sdk -std=gnu++2a -o CMakeFiles/tetris.dir/internal_clock.cpp.o -c /Users/tiagooliva/code/tetris/internal_clock.cpp",
+  "file": "/Users/tiagooliva/code/tetris/internal_clock.cpp"
 }
 ]

@@ -1,0 +1,5 @@
+if(EXISTS "/Users/tiagooliva/code/tetris/test_refframes[1]_tests.cmake")
+  include("/Users/tiagooliva/code/tetris/test_refframes[1]_tests.cmake")
+else()
+  add_test(test_refframes_NOT_BUILT test_refframes_NOT_BUILT)
+endif()

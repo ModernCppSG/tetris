@@ -33,6 +33,7 @@
 /cmake-build-debug/
 /.idea
 /open-terminator.sh
+/build
 
 # non-shareble project stuff
 .cproject
