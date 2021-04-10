@@ -86,19 +86,12 @@ int main() {
       // printCerquilha(posXOld, posYOld, posX, posY);
       keyAlreadyUsed = true;
     }
-
-    if (internalClock.get_is_elapsed()) {
-      clearPosition();
-      moveDown();
-      setPosition();
-    }
-  }
-
-  getchar();
-
-  userInput.stopLoop();
-
-  ui.join();
-
-  userInput.endUserInput();
+    
+    getchar();
+    
+    userInput.stopLoop();
+    
+    ui.join();
+    
+    userInput.endUserInput();
 }
