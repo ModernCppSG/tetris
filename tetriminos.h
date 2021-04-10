@@ -9,8 +9,9 @@
 #include <iostream>
 #include <string>
 #include <tuple>
+#include "tetris_types.h"
 
-#include "./refframes.h"
+#include "refframes.h"
 
 struct Pixel {
   int x, y;    // index position of pixel inside the 2 by 4 envelope
@@ -22,18 +23,16 @@ struct Color {
   std::string HEXCODE;
 };
 
-using envelope = std::array<std::array<bool, 4>, 2>;  // is a matrix
-
 class Tetrimino {
  public:
-  ReferenceFrame origin;  // reference frame placed at bottom-left pixel
-  envelope pixels;        // is the standard cell-matrix that defines the block
+  ReferenceFrame origin{0, 0};  // reference frame placed at bottom-left pixel
+  //envelope pixels;        // is the standard cell-matrix that defines the block
   Color color;
 
  protected:
   std::tuple<int, int> rotation_point;  // index (a, b) for the cell around
                                         // which the rotation happens
-  void display(envelope block) {
+  void display(boolMatrix block) {
     // Print block `drawing` to terminal using `*` and `#` for debugging
     // Tetrimino() = {};
     std::cout << "Block structure:\n";
@@ -47,15 +46,15 @@ class Tetrimino {
       }
     }
   }
-  virtual void initialize() = 0;
-  virtual void rotate() = 0;
+  //virtual void initialize() = 0;
+  //virtual void rotate() = 0;
 };
 
 class Ohh : public Tetrimino {
   // NOTE square should not rotate
  public:
-  bool envelope[2][4] = {{1, 1, 0, 0},
-                         {1, 1, 0, 0}};  // initialize cell-matrix for square
+  boolMatrix envelope = {{{1, 1, 0, 0},
+                          {1, 1, 0, 0}}};  // initialize cell-matrix for square
 };
 
 class Iye : public Tetrimino {

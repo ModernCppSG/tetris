@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cstdio>
 #include <string>
+#include "refframes.h"
+#include "tetris_types.h"
 
 //each \033[ is an ANSI escape sequence
 //class Size is used to define the dimensions of all walls in the game interface
@@ -28,6 +30,13 @@ void refCursor(const std::string& x, const std::string& y) {
     std::cout << "\033[H"; //positions the cursor at the origin
     std::cout << "\033[" + x + "C"; //positions the cursor at the x-column
     std::cout << "\033[" + y + "B"; //positions the cursor at the y-line
+}
+
+//refCursor positions the cursor at any coordinate of the terminal
+void refCursor(int x, int y) {
+    std::cout << "\033[H"; //positions the cursor at the origin
+    std::cout << "\033[" + std::to_string(x) + "C"; //positions the cursor at the x-column
+    std::cout << "\033[" + std::to_string(y) + "B"; //positions the cursor at the y-line
 }
 
 //printWalls uses the Size as an input for printing the walls at the current cursor position line by line
@@ -56,18 +65,6 @@ void printWalls(const Size& walls) {
 
 }
 
-void moveLeft();
-
-void clearPosition() {
-    std::cout << " ";
-    moveLeft();
-}
-
-void setPosition() {
-    std::cout << "#";
-    moveLeft();
-}
-
 void moveUp() {
     std::cout << "\033[1A";
 }
@@ -84,6 +81,31 @@ void moveLeft() {
     std::cout << "\033[1D";
 }
 
+void setPosition() {
+    std::cout << "#";
+    moveLeft();
+}
+
+
+void clearPosition() {
+    std::cout << " ";
+    moveLeft();
+}
+
+void clearPosition(const ReferenceFrame& origin, const matrix& orientation, const boolMatrix& env) {
+    
+    refCursor(origin.origin.x, origin.origin.y);
+    
+    for(auto line = env.cend()-1; line != env.cbegin()-1; line--) {
+        for(const auto& e : *line) {
+            if (e == 1) {
+                std::cout << " ";
+            }
+        }
+        refCursor(origin.origin.x, origin.origin.y-1);
+    }
+}
+
 void printCerquilha(int xOld, int yOld, int x, int y) {
     std::cout << "\033[0;0f";
     std::cout << "   x: " << x << "\t   y: " << y << std::endl;
@@ -96,16 +118,22 @@ void printCerquilha(int xOld, int yOld, int x, int y) {
 
 void printPixel(const bool& pixel) {
     if (pixel == true) { std::cout << '#'; }
-    else { std::cout << "\033[C"; }
+    else {moveRight(); }
 }
 
 template<class T>
 void printTetrimino(T piece) {
     //int rows = sizeof(piece.envelope) / sizeof(piece.envelope[0]);
     //int cols = sizeof(piece.envelope[0]) / sizeof(bool);
-    std::for_each(std::begin(piece.envelope[0]), std::end(piece.envelope[0]), printPixel);
-    std::cout << "\033[1B" << "\033[4D"; //std::to_string(rows - 1) and std::to_string(cols) can substitue "1" and "4"
+    refCursor(piece.origin.origin.x, piece.origin.origin.y);
     std::for_each(std::begin(piece.envelope[1]), std::end(piece.envelope[1]), printPixel);
+    moveUp();
+    moveLeft();
+    moveLeft();
+    moveLeft();
+    moveLeft();
+    //std::cout << "\033[1B" << "\033[4D"; //std::to_string(rows - 1) and std::to_string(cols) can substitue "1" and "4"
+    std::for_each(std::begin(piece.envelope[0]), std::end(piece.envelope[0]), printPixel);
     std::cout << "\033[H";
 }
 
