@@ -8,8 +8,7 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 find_package(GTest REQUIRED)
 
-add_executable(${PROJECT_NAME} main.cpp internal_clock.cpp)
-add_executable(${PROJECT_NAME} tests/test_refframes.cpp)
+add_executable(${PROJECT_NAME} main.cpp internal_clock.cpp tests/test_refframes.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE Threads::Threads GTest::gtest GTest::gtest_main)
 gtest_discover_tests(${PROJECT_NAME})
