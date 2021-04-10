@@ -86,12 +86,13 @@ int main() {
       // printCerquilha(posXOld, posYOld, posX, posY);
       keyAlreadyUsed = true;
     }
-    
+
     getchar();
-    
+
     userInput.stopLoop();
-    
+
     ui.join();
-    
+
     userInput.endUserInput();
+  }
 }
