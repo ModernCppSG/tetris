@@ -1,3 +1,0 @@
-/Users/tiagooliva/code/tetris/CMakeFiles/rebuild_cache.dir
-/Users/tiagooliva/code/tetris/CMakeFiles/edit_cache.dir
-/Users/tiagooliva/code/tetris/CMakeFiles/tetris.dir
