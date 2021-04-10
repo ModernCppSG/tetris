@@ -39,4 +39,4 @@
 .cproject
 .project
 .settings
-.cache
+.cache/
