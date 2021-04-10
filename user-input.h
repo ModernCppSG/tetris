@@ -185,7 +185,7 @@ class UserInput {
       }
 
       first = true;
-      read(fileno(stdin), &c, 1);
+      /* read(fileno(stdin), &c, 1); */
 
       switch (c) {
         case '\n':
@@ -193,10 +193,10 @@ class UserInput {
           std::cout << KEY_ENTER;
           break;
         case START_ESCAPE:
-          read(fileno(stdin), &c, 1);
+          /* read(fileno(stdin), &c, 1); */
           // std::cout << c << std::endl;
           if (c == MIDDLE_ESCAPE) {
-            read(fileno(stdin), &c, 1);
+            /* read(fileno(stdin), &c, 1); */
             // std::cout << c << std::endl;
 
             switch (c) {
