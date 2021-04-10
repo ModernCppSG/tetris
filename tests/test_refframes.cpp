@@ -10,13 +10,13 @@
 
 std::array<std::array<int, 2>, 2> IDENTITY = {{{1, 0}, {0, 1}}};
 
-matrix rot090 = {{{0, -1}, {1, 0}}};
-matrix rot180 = {{{-1, 0}, {0, -1}}};
-matrix rot270 = {{{0, 1}, {-1, 0}}};
+constexpr matrix rot090 = {{{0, -1}, {1, 0}}};
+constexpr matrix rot180 = {{{-1, 0}, {0, -1}}};
+constexpr matrix rot270 = {{{0, 1}, {-1, 0}}};
 
-matrix minus_rot090 = {{{0, 1}, {-1, 0}}};
-matrix minus_rot180 = {{{-1, 0}, {0, -1}}};
-matrix minus_rot270 = {{{0, -1}, {1, 0}}};
+constexpr matrix minus_rot090 = {{{0, 1}, {-1, 0}}};
+constexpr matrix minus_rot180 = {{{-1, 0}, {0, -1}}};
+constexpr matrix minus_rot270 = {{{0, -1}, {1, 0}}};
 
 // Rotate left (counter clockwise)
 TEST(CounterClockWise, Initialization) {
