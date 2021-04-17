@@ -31,6 +31,25 @@ void fnInput() {
     }
 }
 
+lock_wrapper lockWrapper{};
+
+std::atomic_bool pleaseReadKeys = false;
+
+UserInput& userInput{UserInput::getInstance(lockWrapper)};
+
+void allowConsumeKeys_fn() {
+    while (1) {
+        lockWrapper.wait();
+        pleaseReadKeys = true;
+        
+        while(!userInput.isEmpty()) {
+            userInput.popKey();
+        }
+        
+        pleaseReadKeys = false;
+    }
+}
+
 int main() {
     auto x = "5";
     auto y = "3";
