@@ -94,4 +94,19 @@ void printCerquilha(int xOld, int yOld, int x, int y) {
     std::cout << "#";
 }
 
+void printPixel(const bool& pixel) {
+    if (pixel == true) { std::cout << '#'; }
+    else { std::cout << "\033[C"; }
+}
+
+template<class T>
+void printTetrimino(T piece) {
+    //int rows = sizeof(piece.envelope) / sizeof(piece.envelope[0]);
+    //int cols = sizeof(piece.envelope[0]) / sizeof(bool);
+    std::for_each(std::begin(piece.envelope[0]), std::end(piece.envelope[0]), printPixel);
+    std::cout << "\033[1B" << "\033[4D"; //std::to_string(rows - 1) and std::to_string(cols) can substitue "1" and "4"
+    std::for_each(std::begin(piece.envelope[1]), std::end(piece.envelope[1]), printPixel);
+    std::cout << "\033[H";
+}
+
 #endif //TETRIS_INTERFACE_H
