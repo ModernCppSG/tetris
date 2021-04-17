@@ -18,7 +18,6 @@ private:
     int height_;
 };
 
-
 //prepInterface clears the terminal
 void prepInterface() {
     std::cout << "\033[2J";
