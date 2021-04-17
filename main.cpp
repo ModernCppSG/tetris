@@ -12,21 +12,19 @@ UserInput& userInput{UserInput::getInstance()};
 std::atomic_bool keepLooping = true;
 std::atomic_bool pleaseGoDown = false;
 
-
-/*void fnClock() {
+void fnClock() {
     while(keepLooping) {
-        if(internalClock.get_is_elapsed()) {
-            pleaseGoDown = true;
-        }
+        clock_lock.wait();
+        pleaseGoDown = true;
     }
-}*/
+}
 
 Key key{' '};
 std::atomic_bool keyAlreadyUsed = true;
 
 void fnInput() {
     while(keepLooping) {
-        if(userInput.isEmpty() == false) {
+        if(!userInput.isEmpty()) {
             key = userInput.popKey();
             keyAlreadyUsed = false;
         }
@@ -49,7 +47,7 @@ int main() {
     std::thread ui{&UserInput::loopReadInput, &userInput};
     
     std::thread tUserInput{fnInput};
-    //std::thread tClockInternal{fnClock};
+    std::thread tClockInternal{fnClock};
     
 //    int posXOld = 10;
 //    int posYOld = 3;
@@ -99,13 +97,14 @@ int main() {
             keyAlreadyUsed = true;
         }
         
-        if(count == internalClock.get_elapsed_intervals()) {
+        if(pleaseGoDown) {
             clearPosition(ohh.origin, ohh.origin.orientation, ohh.envelope);
             //moveDown();
             ohh.origin.translate(0,1);
             //setPosition();
             printTetrimino(ohh);
             count++;
+            pleaseGoDown = false;
         }
     }
     
