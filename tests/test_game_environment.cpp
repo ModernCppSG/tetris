@@ -59,7 +59,7 @@ TEST(ClassSize, MixedPositiveNegativeIntegersSizes) {
     ASSERT_EQ(testSize.height(), 25);
     
     testSize = Size{-15, 0};
-    ASSERT_EQ(testSize.width(), -5);
+    ASSERT_EQ(testSize.width(), 15);
     ASSERT_EQ(testSize.height(), 0);
     
     testSize = Size{0, -42};
