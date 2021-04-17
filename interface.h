@@ -9,7 +9,7 @@
 //class Size is used to define the dimensions of all walls in the game interface
 class Size {
 public:
-    Size(int width, int height): width_{width}, height_{height} {}
+    Size(int width, int height): width_{abs(width)}, height_{abs(height)} {}
     int width() const { return width_; }
     int height() const { return height_; }
 
@@ -84,16 +84,6 @@ void moveLeft() {
     std::cout << "\033[1D";
 }
 
-void printCerquilha(int xOld, int yOld, int x, int y) {
-    std::cout << "\033[0;0f";
-    std::cout << "   x: " << x << "\t   y: " << y << std::endl;
-    std::cout << "xOld: " << xOld << "\tyOld: " << yOld;
-    std::cout << "\033[" + std::to_string(yOld) << ";" << std::to_string(xOld) << "f";
-    std::cout << "o";
-    std::cout << "\033[" + std::to_string(y) << ";" << std::to_string(x) << "f";
-    std::cout << "#";
-}
-
 void printPixel(const bool& pixel) {
     if (pixel == true) { std::cout << '#'; }
     else { std::cout << "\033[C"; }
@@ -103,9 +93,15 @@ template<class T>
 void printTetrimino(T piece) {
     //int rows = sizeof(piece.envelope) / sizeof(piece.envelope[0]);
     //int cols = sizeof(piece.envelope[0]) / sizeof(bool);
-    std::for_each(std::begin(piece.envelope[0]), std::end(piece.envelope[0]), printPixel);
-    std::cout << "\033[1B" << "\033[4D"; //std::to_string(rows - 1) and std::to_string(cols) can substitue "1" and "4"
+    refCursor(piece.origin.origin.x, piece.origin.origin.y);
     std::for_each(std::begin(piece.envelope[1]), std::end(piece.envelope[1]), printPixel);
+    moveUp();
+    moveLeft();
+    moveLeft();
+    moveLeft();
+    moveLeft();
+    //std::cout << "\033[1B" << "\033[4D"; //std::to_string(rows - 1) and std::to_string(cols) can substitue "1" and "4"
+    std::for_each(std::begin(piece.envelope[0]), std::end(piece.envelope[0]), printPixel);
     std::cout << "\033[H";
 }
 
