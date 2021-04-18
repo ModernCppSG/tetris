@@ -16,39 +16,11 @@
 #include <condition_variable>
 #include <vector>
 #include <algorithm>
+#include "lockWrapper.h"
 
 using time_unit = std::chrono::milliseconds;
 using clock_unit = std::chrono::time_point<std::chrono::system_clock>;
 using clock_int = uint32_t;
-
-/*
- * Well, this class utility might be a bit controversial.
- * It is just a wrapper to a "simplify" the use of a condition variable.
- * Main reasons:
- * 		- Avoid using a global variable, but allow thread sharing. This wrapper
- * 		will bind both mutex'es and cond. variable. objects and simplify sharing, reducing
- * 		the number of arguments;
- * 		- Unlocks at the destruction of the wrapper.
- */
-class lock_wrapper {
-private:
-	std::mutex mtx;
-	std::unique_lock<std::mutex> un_mtx;
-	std::condition_variable cv;
-public:
-	lock_wrapper(){
-		un_mtx = std::unique_lock<std::mutex>(mtx);
-	}
-	void wait(){
-		cv.wait(un_mtx);
-	}
-	void notify_all(){
-		cv.notify_all();
-	}
-	~lock_wrapper(){
-		cv.notify_all();
-	}
-};
 
 /*
  * Put a cool description here. :b
