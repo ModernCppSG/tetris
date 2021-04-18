@@ -17,14 +17,14 @@ public:
     {
     }
     
-    inline void notify( int tid ) {
+    inline void notify( /*int tid*/ ) {
         std::unique_lock<std::mutex> lock(mtx);
         count++;
         //cout << "thread " << tid <<  " notify" << endl;
         //notify the waiting thread
         cv.notify_one();
     }
-    inline void wait( int tid ) {
+    inline void wait( /*int tid*/ ) {
         std::unique_lock<std::mutex> lock(mtx);
         while(count == 0) {
             //cout << "thread " << tid << " wait" << endl;
