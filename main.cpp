@@ -2,51 +2,46 @@
 #include "internal_clock.hpp"
 #include "interface.h"
 #include "tetriminos.h"
+#include "semaphore.h"
 
 using namespace std::chrono_literals;
 
-lock_wrapper clock_lock{};
-internal_clock internalClock{1000ms, 1, &clock_lock};
-UserInput& userInput{UserInput::getInstance()};
+lock_wrapper clockLock{};
+internal_clock internalClock{1000ms, 1, &clockLock};
+
+lock_wrapper userInputLock{};
+UserInput& userInput{UserInput::getInstance(userInputLock)};
 
 std::atomic_bool keepLooping = true;
-std::atomic_bool pleaseGoDown = false;
+
+std::mutex commandQueueMtx;
+semaphore commandQueueSem;
+std::queue<Key> commandQueue;
+
 
 void fnClock() {
     while(keepLooping) {
-        clock_lock.wait();
-        pleaseGoDown = true;
+        clockLock.wait();
+        {
+            std::lock_guard<std::mutex> lg{commandQueueMtx};
+            commandQueue.push(KEY_DOWN);
+            commandQueueSem.notify();
+        }
     }
 }
 
 Key key{' '};
-std::atomic_bool keyAlreadyUsed = true;
 
 void fnInput() {
     while(keepLooping) {
-        if(!userInput.isEmpty()) {
-            key = userInput.popKey();
-            keyAlreadyUsed = false;
+        userInputLock.wait();
+        {
+            std::lock_guard<std::mutex> lg{commandQueueMtx};
+            while(!userInput.isEmpty()) {
+                commandQueue.push(userInput.popKey());
+                commandQueueSem.notify();
+            }
         }
-    }
-}
-
-lock_wrapper lockWrapper{};
-
-std::atomic_bool pleaseReadKeys = false;
-
-UserInput& userInput{UserInput::getInstance(lockWrapper)};
-
-void allowConsumeKeys_fn() {
-    while (1) {
-        lockWrapper.wait();
-        pleaseReadKeys = true;
-        
-        while(!userInput.isEmpty()) {
-            userInput.popKey();
-        }
-        
-        pleaseReadKeys = false;
     }
 }
 
@@ -68,16 +63,6 @@ int main() {
     std::thread tUserInput{fnInput};
     std::thread tClockInternal{fnClock};
     
-//    int posXOld = 10;
-//    int posYOld = 3;
-//    int posX = 10;
-//    int posY = 3;
-    
-    //printCerquilha(posXOld, posYOld, posX, posY);
-    
-    //refCursor(x, y);
-    //setPosition();
-    
     internalClock.run();
     
     Ohh ohh{};
@@ -88,42 +73,30 @@ int main() {
     //TODO x e y como int ao invés de float (dentro do origin)
     //TODO refCursor receber inteiros
     
-    int count = 1;
-    
     while(keepLooping) {
-        if(!keyAlreadyUsed) {
-            clearPosition(ohh.origin, ohh.origin.orientation, ohh.envelope);
+        commandQueueSem.wait();
+        std::lock_guard<std::mutex> lg{commandQueueMtx};
+        while(!commandQueue.empty()) {
             
-            if(key == KEY_UP) {
-                //moveUp();
-                ohh.origin.translate(0,-1);
-            } else if (key == KEY_RIGHT) {
-                //moveRight();
-                ohh.origin.translate(1,0);
-            } else if (key == KEY_DOWN) {
-//                moveDown();
-                ohh.origin.translate(0,1);
-            } else if (key == KEY_LEFT) {
-//                moveLeft();
-                ohh.origin.translate(-1,0);
+            key = commandQueue.front();
+            commandQueue.pop();
+            
+            clearPosition(ohh.origin, ohh.origin.orientation, ohh.envelope);
+    
+            if (key == KEY_UP) {
+                ohh.origin.translate(0, -1);
             }
-            
+            else if (key == KEY_RIGHT) {
+                ohh.origin.translate(1, 0);
+            }
+            else if (key == KEY_DOWN) {
+                ohh.origin.translate(0, 1);
+            }
+            else if (key == KEY_LEFT) {
+                ohh.origin.translate(-1, 0);
+            }
+    
             printTetrimino(ohh);
-            
-            //std::this_thread::sleep_for(20ms);
-            
-            //printCerquilha(posXOld, posYOld, posX, posY);
-            keyAlreadyUsed = true;
-        }
-        
-        if(pleaseGoDown) {
-            clearPosition(ohh.origin, ohh.origin.orientation, ohh.envelope);
-            //moveDown();
-            ohh.origin.translate(0,1);
-            //setPosition();
-            printTetrimino(ohh);
-            count++;
-            pleaseGoDown = false;
         }
     }
     
