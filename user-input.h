@@ -20,98 +20,20 @@
 #include <mutex>
 #include <map>
 #include <condition_variable>
+#include <iostream>
+#include "lockWrapper.h"
 
 #define START_ESCAPE '\033'
 #define MIDDLE_ESCAPE '['
 
 //from https://stackoverflow.com/a/10995085/6609908
 #define HIDE_CURSOR "\033[?25l"
-#define SHOW_CURSOR "\033[?25h"
-
-#define CLEAR_SCREEN "\033[2J"
-
-#define MOVE_TO(x,y) std::string("\033["+std::to_string(y)+";"+std::to_string(x)+"H")
-
-class lock_wrapper {
-private:
-    std::mutex mtx;
-    std::unique_lock<std::mutex> un_mtx;
-    std::condition_variable cv;
-public:
-    lock_wrapper(){
-        un_mtx = std::unique_lock<std::mutex>(mtx);
-    }
-    void wait(){
-        cv.wait(un_mtx);
-    }
-    void notify_all(){
-        cv.notify_all();
-    }
-    ~lock_wrapper(){
-        cv.notify_all();
-    }
-};
 
 // protect a single operation with a lock_guard on the mutex
 #define PROTECT(operation, mutex_variable)                  \
 {                                                           \
     const std::lock_guard<std::mutex> lock{mutex_variable}; \
     operation;                                              \
-}
-
-int posY = 3;
-int posX = 1;
-
-void setPosition(int x, int y) {
-    posY = std::max(y, 0);
-    posX = std::max(x, 0);
-    //std::cout << "\033[" << y << ";" << x << "H";
-    std::cout << MOVE_TO(x, y);
-}
-/*
-void moveUp(int times = 1) {
-    int posX_backup = posX;
-    int posY_backup = posY;
-    setPosition(0, 0);
-    std::cout << std::setw(10) << "KEY_UP";
-    setPosition(posX_backup, posY_backup);
-    
-    setPosition(posX, posY - times);
-}
-
-void moveRight(int times = 1) {
-    int posX_backup = posX;
-    int posY_backup = posY;
-    setPosition(0, 0);
-    std::cout << std::setw(10) << "KEY_RIGHT";
-    setPosition(posX_backup, posY_backup);
-    
-    setPosition(posX + times, posY);
-}
-
-void moveDown(int times = 1) {
-    int posX_backup = posX;
-    int posY_backup = posY;
-    setPosition(0, 0);
-    std::cout << std::setw(10) << "KEY_DOWN";
-    setPosition(posX_backup, posY_backup);
-    
-    setPosition(posX, posY + times);
-}
-
-void moveLeft(int times = 1) {
-    int posX_backup = posX;
-    int posY_backup = posY;
-    setPosition(0, 0);
-    std::cout << std::setw(10) << "KEY_LEFT";
-    setPosition(posX_backup, posY_backup);
-    
-    setPosition(posX - times, posY);
-}
-*/
-void clearScreen() {
-    std::cout << CLEAR_SCREEN;
-    setPosition(posX, posY);
 }
 
 /// Class Key to represent a key pressed by the player with its value and a display char
@@ -269,7 +191,7 @@ private:
             }
             
             first = true;
-            read( fileno( stdin ), &c, 1 );
+            std::cin >> c;
             
             switch(c) {
                 case '\n':
@@ -278,10 +200,14 @@ private:
                     //std::cout << KEY_ENTER;
                     break;
                 case START_ESCAPE:
-                    read( fileno( stdin ), &c, 1 );
+    
+                    std::cin >> c;
+                    
                     //std::cout << c << std::endl;
                     if (c == MIDDLE_ESCAPE) {
-                        read( fileno( stdin ), &c, 1 );
+    
+                        std::cin >> c;
+                        
                         //std::cout << c << std::endl;
                         
                         switch (c) {
@@ -321,19 +247,10 @@ private:
                     break;
             }
             
-//            auto oldPosX = posX;
-//            auto oldPosY = posY;
-//            setPosition(0, 50);
-//            printQueue();
-//            setPosition(oldPosX, oldPosY);
         }
         else if( res < 0 )
         {
             perror( "select error" );
-        }
-        else
-        {
-            //printf( "Select timeout\n" );
         }
     }
     
